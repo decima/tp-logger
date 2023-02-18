@@ -135,13 +135,15 @@ func (u *User) DecisionTree() int {
 		l2.
 			WithField("evt", "product.add").
 			WithField("product", product.Uuid).
-			Info("adding product in cart")
+			WithField("name", product.Name).
+			Info("adding " + product.Name + " in cart")
 		if product.Quantity < 1 {
 			l2.
 				WithField("evt", "product.add").
 				WithField("product", product.Uuid).
 				WithField("stocks", 0).
-				Error("Product Out of Stock")
+				WithField("name", product.Name).
+				Error("Product " + product.Name + " Out of Stock")
 			return 1
 		}
 		product.Quantity--
@@ -150,7 +152,8 @@ func (u *User) DecisionTree() int {
 				WithField("evt", "product.add").
 				WithField("product", product.Uuid).
 				WithField("stocks", product.Quantity).
-				Warn("low product stocks")
+				WithField("name", product.Name).
+				Warn("low product " + product.Name + " stocks")
 		}
 		u.Cart = append(u.Cart, e)
 		return []int{1, 1, 1, 2, 2, 3, 4, 4, 4}[rand.Intn(9)]
@@ -167,7 +170,8 @@ func (u *User) DecisionTree() int {
 			WithField("evt", "product.remove").
 			WithField("product", product.Uuid).
 			WithField("stocks", product.Quantity).
-			Info("Removing from cart")
+			WithField("name", product.Name).
+			Info("Removing " + product.Name + "from cart")
 		return 1
 	case 4: //checkout
 		if len(u.Cart) == 0 {
