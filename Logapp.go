@@ -232,7 +232,7 @@ func (u *User) DecisionTree() int {
 		l2.
 			WithField("evt", "orders.view").
 			WithField("order", *o).
-			Error("checking old order")
+			Info("checking old order")
 	case 12:
 		l2.
 			WithField("evt", "user.logout").
