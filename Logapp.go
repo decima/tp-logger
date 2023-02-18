@@ -30,7 +30,7 @@ type User struct {
 
 var users []User
 
-const MaxUsers = 1
+const MaxUsers = 100
 const SimultaneousLogs = 20
 const NbProducts = 100
 const MaxQuantities = 20
