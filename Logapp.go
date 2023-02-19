@@ -31,7 +31,7 @@ type User struct {
 var users []User
 
 const MaxUsers = 100
-const SimultaneousLogs = 20
+const SimultaneousLogs = 25
 const NbProducts = 100
 const MaxQuantities = 20
 
@@ -47,7 +47,7 @@ func main() {
 		f := uuid.New().String()
 		Stocks = append(Stocks, Item{
 			Name:     productNames[i],
-			Quantity: rand.Intn(MaxQuantities),
+			Quantity: (rand.Intn(MaxQuantities) + 1) * ((NbProducts - i) / 10),
 			Uuid:     f,
 		})
 	}
@@ -130,7 +130,19 @@ func (u *User) DecisionTree() int {
 		time.Sleep(time.Duration(rand.Intn(5)) * sleepDuration)
 		return []int{1, 1, 1, 1, 2, 2, 2, 2, 3, 10}[rand.Intn(10)]
 	case 2:
-		e := rand.Intn(len(Stocks))
+		e := 0
+		switch rand.Intn(4) {
+		case 0:
+			e = rand.Intn(len(Stocks))
+
+		case 1:
+			e = rand.Intn(len(Stocks) / 5)
+		case 2:
+			e = rand.Intn(len(Stocks) / 10)
+		case 3:
+			e = rand.Intn(len(Stocks) / 20)
+
+		}
 		product := &Stocks[e]
 		l2.
 			WithField("evt", "product.add").
@@ -280,8 +292,14 @@ func (u *User) gettingOneOrder() *string {
 
 func productNameGenerator() []string {
 	prefixes := []string{"pantalon", "tee-shirt", "manteau", "chemise", "écharpe", "chaussures", "chausettes", "bottes", "bonnet", "gants", "lunettes"}
+	rand.Shuffle(len(prefixes), func(i, j int) { prefixes[i], prefixes[j] = prefixes[j], prefixes[i] })
+
 	gender := []string{"homme", "femme", "fille", "garçon"}
+	rand.Shuffle(len(gender), func(i, j int) { gender[i], gender[j] = gender[j], gender[i] })
+
 	colors := []string{"bleu", "blanc", "rouge", "vert", "noir", "gris", "jaune", "violet", "rose"}
+	rand.Shuffle(len(colors), func(i, j int) { colors[i], colors[j] = colors[j], colors[i] })
+
 	e := []string{}
 	for _, p := range prefixes {
 		for _, g := range gender {
